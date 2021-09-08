@@ -28,8 +28,9 @@ libc etc isn't broken)
 
 ## Usage
 
+```
 ./brcm963xx_flash <-r/-w> <image-file>
-
+```
 Use -r to read flash, -w to write flash
 
 If you want to dump to stdout, use -stdout as the image file name
