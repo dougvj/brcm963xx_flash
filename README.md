@@ -1,4 +1,4 @@
-# brcm963xxa\_flash
+# brcm963xx\_flash
 
 Flash utility for bcrm963xx SoCs which were used in many routers.
 
