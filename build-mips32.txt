@@ -1,0 +1,7 @@
+[binaries]
+c = 'mips-linux-uclibc-gcc'
+cpp = 'mips-linux-uclibc-g++'
+ar = 'mips-linux-uclibc-ar'
+strip = 'mips-linux-uclibc-cstrip'
+
+[properties]
