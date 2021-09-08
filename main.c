@@ -26,8 +26,8 @@ typedef struct {
   int result;
 } board_ioctl_params;
 
-#define BOARD_ioctl_FLASH_WRITE _IOWR('B', 1, board_ioctl_params)
-#define BOARD_ioctl_FLASH_READ _IOWR('B', 1, board_ioctl_params)
+#define BOARD_IOCTL_FLASH_WRITE _IOWR('B', 0, board_ioctl_params)
+#define BOARD_IOCTL_FLASH_READ _IOWR('B', 1, board_ioctl_params)
 
 void print_usage_and_quit(const char* exec_name) {
   fprintf(stderr, "Usage: %s <-r/-w> <image-file>\n"
@@ -50,7 +50,7 @@ int read_flash_size(int board_fd) {
     .data = &len,
   };
   int ret;
-  if ((ret = ioctl(board_fd, BOARD_ioctl_FLASH_READ, &board_params)) != 0) {
+  if ((ret = ioctl(board_fd, BOARD_IOCTL_FLASH_READ, &board_params)) != 0) {
     fprintf(stderr, "ioctl failed with return %d (1)\n", ret);
     exit(1);
   }
@@ -84,7 +84,7 @@ void write_flash(int board_fd, char* buf, int len) {
     .action = BCM_IMAGE_WHOLE,
   };
   int ret;
-  if ((ret = ioctl(board_fd, BOARD_ioctl_FLASH_WRITE, &board_params)) != 0) {
+  if ((ret = ioctl(board_fd, BOARD_IOCTL_FLASH_WRITE, &board_params)) != 0) {
     fprintf(stderr, "ioctl failed with return %d (2)\n", ret);
     exit(1);
   }
