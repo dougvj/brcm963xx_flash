@@ -12,16 +12,14 @@ A configuration to create a cross compiler is provided and symlinked to
 .config, so you can just run `ct-ng build` and it will produce a cross compiler
 in your `~/x-tools/` directory.
 
-Export the cross compiler to your path with `export
-$PATH:~/x-tools/mips-linux-uclibc/bin`
+Export the cross compiler to your path with
+`export PATH=$PATH:~/x-tools/mips-linux-uclibc/bin`
 
 Then run:
 
 `meson --cross=./build-mips32.txt build`
 
-`cd build`
-
-`ninja build`
+`ninja -C build`
 
 The binary `brcm963xx_flash` will be created which can run on the SoC (assuming
 libc etc isn't broken)

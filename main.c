@@ -14,7 +14,7 @@ typedef enum {
   FLASH_SIZE=7, // Get the size of the flash
 } board_action;
 
-#define FLASH_BASE 0xB8000000
+#define FLASH_BASE 0x18000000
 
 
 typedef struct {
@@ -44,31 +44,29 @@ void print_usage_and_quit(const char* exec_name) {
 
 
 int read_flash_size(int board_fd) {
-  int len = 0;
   board_ioctl_params board_params = {
     .action = FLASH_SIZE,
-    .data = &len,
   };
   int ret;
-  if ((ret = ioctl(board_fd, BOARD_IOCTL_FLASH_READ, &board_params)) != 0) {
+  if ((ret = ioctl(board_fd, BOARD_IOCTL_FLASH_READ, &board_params)) <= 0) {
     fprintf(stderr, "ioctl failed with return %d (1)\n", ret);
     exit(1);
   }
-  if (board_params.result != 0) {
+  if (board_params.result <= 0) {
     fprintf(stderr, "could not read flash size: %d\n", board_params.result);
     exit(1);
   }
-  return len;
+  return ret;
 }
 
 void read_flash(char* buf, int len) {
   int mem_fd = open("/dev/mem", O_RDWR|O_SYNC);
-  if (mem_fd == -1) {
+  if (mem_fd < 0) {
     fprintf(stderr, "unable to open /dev/mem\n");
     exit(1);
   }
   char* src = mmap(NULL, len, PROT_READ, MAP_SHARED, mem_fd, FLASH_BASE);
-  if (!src) {
+  if (src == MAP_FAILED) {
     fprintf(stderr, "unable to map flash\n");
     exit(1);
   }
@@ -126,11 +124,12 @@ int main(int argc, char** argv) {
       fprintf(stderr, "could not open %s\n", filename);
       exit(1);
     }
+    len = 0x100000;
     read_flash(image_data, len);
     write(out_fd, image_data, len);
     close(out_fd);
   }
-  if (strcmp(mode, "-w") == 0) {
+  else if (strcmp(mode, "-w") == 0) {
     // write mode
     int in_fd = open(filename, O_RDONLY);
     if (in_fd == -1) {
